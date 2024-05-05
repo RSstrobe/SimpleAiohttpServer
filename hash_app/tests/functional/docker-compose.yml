@@ -1,0 +1,32 @@
+version: '4.14'
+
+services:
+  hash_app:
+    container_name: hash_app
+    build: ../../.
+    image: hash_app_img
+    env_file: .env
+    environment:
+      - APP_PORT=${APP_PORT}
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    networks:
+      - app_network
+
+  test_hash_app:
+    container_name: test_hash_app
+    image: hash_app_img
+    env_file: .env
+    environment:
+      PROJECT_NAME: "hash_app_tests"
+    entrypoint: >
+      sh -c "pip install --no-cache-dir -r tests/functional/requirements.txt
+      && pytest -p no:cacheprovider tests/functional/src"
+    networks:
+      - app_network
+    depends_on:
+      - hash_app
+
+networks:
+  app_network:
+    driver: bridge

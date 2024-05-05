@@ -1,0 +1,10 @@
+version: '4.14'
+
+services:
+  hash_app:
+    container_name: hash_app
+    build: hash_app
+    environment:
+      - APP_PORT=${APP_PORT}
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
